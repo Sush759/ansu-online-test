@@ -1,0 +1,202 @@
+
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ansu Online Test</title>
+<style>
+:root{--blue:#1557a6;--blue2:#0d3975;--pale:#eaf3ff;--ink:#17243a;--muted:#63738b;--line:#d8e4f2}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8fd;color:var(--ink)}
+header{background:linear-gradient(120deg,var(--blue2),#2878d0);color:white;padding:22px 5%;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-size:28px;font-weight:800}
+.tag{font-size:13px;margin-top:5px}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer;background:var(--blue);color:white}
+button.secondary{background:white;color:var(--blue);border:1px solid var(--line)}
+button.light{background:#e8f2ff;color:var(--blue2)}
+main{max-width:1050px;margin:28px auto;padding:0 18px}
+.hero,.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:25px;box-shadow:0 8px 28px #153b7010}
+.panel{display:none;margin-top:18px}
+.panel.active{display:block}
+h1{margin:0 0 8px;font-size:30px}
+h2{color:var(--blue2)}
+p{color:var(--muted);line-height:1.55}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:20px}
+.card,.question{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.pill{display:inline-block;background:var(--pale);color:var(--blue2);padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+label{display:block;font-weight:bold;margin:12px 0 6px}
+input,select{width:100%;padding:11px;border:1px solid #c8d8eb;border-radius:9px;font:inherit}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.option{display:flex;gap:9px;align-items:flex-start;margin:10px 0;font-weight:normal}
+.option input{width:auto}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.result{background:var(--pale);border-radius:12px;padding:18px;margin-top:18px}
+.small{font-size:12px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);padding:28px}
+@media(max-width:600px){.row{grid-template-columns:1fr}header{padding:18px}.hero{padding:18px}}
+</style>
+</head>
+<body>
+<header>
+<div>
+<div class="brand">ANSU ONLINE TEST</div>
+<div class="tag">सीखें • अभ्यास करें • सफलता पाएं | Learn • Practice • Succeed</div>
+</div>
+<nav>
+<button class="secondary" onclick="show('home')">Home</button>
+<button class="secondary" onclick="show('admin')">Admin Panel</button>
+</nav>
+</header>
+<main>
+<section id="home" class="panel active">
+<div class="hero">
+<span class="pill">FREE ONLINE EXAM</span>
+<h1>स्वागत है! Welcome to Ansu Online Test</h1>
+<p>अपनी तैयारी को परखें और तुरंत अपना परिणाम देखें।</p>
+<div class="row">
+<div>
+<label>विद्यार्थी का नाम / Student Name</label>
+<input id="student" placeholder="अपना नाम लिखें">
+</div>
+<div>
+<label>विषय / Subject</label>
+<select id="subject">
+<option>O Level - IT Tools</option>
+<option>O Level - Web Designing</option>
+<option>General Knowledge</option>
+<option>Computer Basics</option>
+</select>
+</div>
+</div>
+<div class="actions">
+<button onclick="startTest()">Start Test / टेस्ट शुरू करें</button>
+<span class="pill">No Timer / बिना टाइमर</span>
+</div>
+</div>
+<div class="cards">
+<div class="card"><b>📝 MCQ Test</b><p>चार विकल्प वाले प्रश्न।</p></div>
+<div class="card"><b>⚡ Instant Result</b><p>तुरंत अपना रिजल्ट देखें।</p></div>
+<div class="card"><b>📱 Mobile Friendly</b><p>मोबाइल और कंप्यूटर दोनों पर।</p></div>
+</div>
+</section>
+
+<section id="test" class="panel">
+<h2 id="testTitle">Online Test</h2>
+<p id="testInfo">सभी प्रश्न हल करें। कोई समय सीमा नहीं है।</p>
+<div id="questions"></div>
+<button onclick="submitTest()">Submit Test</button>
+<div id="result"></div>
+</section>
+
+<section id="admin" class="panel">
+<h2>Admin Panel / एडमिन पैनल</h2>
+<p>यह शुरुआती डेमो है। प्रश्न इसी ब्राउज़र में सेव होंगे।</p>
+<label>विषय / Subject</label>
+<input id="aSubject" value="O Level - IT Tools">
+<label>प्रश्न / Question</label>
+<input id="aQuestion" placeholder="प्रश्न लिखें">
+<label>चार विकल्प / Four Options</label>
+<div class="row">
+<input id="o0" placeholder="विकल्प A">
+<input id="o1" placeholder="विकल्प B">
+<input id="o2" placeholder="विकल्प C">
+<input id="o3" placeholder="विकल्प D">
+</div>
+<label>सही उत्तर / Correct Answer</label>
+<select id="aCorrect">
+<option value="0">A</option>
+<option value="1">B</option>
+<option value="2">C</option>
+<option value="3">D</option>
+</select>
+<div class="actions">
+<button onclick="addQuestion()">Add Question</button>
+<button class="light" onclick="showQuestionList()">View Questions</button>
+</div>
+<div id="adminMessage" class="result"></div>
+<ol id="adminList"></ol>
+</section>
+</main>
+<footer>© Ansu Online Test • हिंदी + English</footer>
+
+<script>
+const starter=[
+{subject:"O Level - IT Tools",q:"CPU का पूरा नाम क्या है?",o:["Central Processing Unit","Computer Personal Unit","Central Program Utility","Control Processing User"],a:0},
+{subject:"O Level - IT Tools",q:"कंप्यूटर का मस्तिष्क किसे कहते हैं?",o:["Monitor","CPU","Keyboard","Mouse"],a:1},
+{subject:"O Level - IT Tools",q:"इनपुट डिवाइस कौन-सा है?",o:["Printer","Monitor","Keyboard","Speaker"],a:2},
+{subject:"O Level - IT Tools",q:"RAM किस प्रकार की मेमोरी है?",o:["Volatile","Permanent","Optical","External"],a:0},
+{subject:"O Level - IT Tools",q:"WWW का पूरा नाम क्या है?",o:["World Wide Web","World Web Window","Wide World Web","Web World Wide"],a:0}
+];
+let bank=loadBank(),current=[],answers={};
+function loadBank(){
+try{return JSON.parse(localStorage.getItem('ansuQuestions'))||starter.slice()}
+catch(e){return starter.slice()}
+}
+function saveBank(){localStorage.setItem('ansuQuestions',JSON.stringify(bank))}
+function show(id){
+document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+function startTest(){
+let name=document.getElementById('student').value.trim();
+if(!name){alert('कृपया अपना नाम लिखें');return}
+let subject=document.getElementById('subject').value;
+current=bank.filter(x=>x.subject===subject);
+if(!current.length){alert('इस विषय के प्रश्न उपलब्ध नहीं हैं। Admin Panel में प्रश्न जोड़ें।');return}
+answers={};
+document.getElementById('testTitle').textContent=subject;
+document.getElementById('testInfo').textContent=name+' • '+current.length+' प्रश्न • बिना टाइमर';
+document.getElementById('result').innerHTML='';
+document.getElementById('questions').innerHTML=current.map((q,i)=>`
+<div class="question">
+<b>Q${i+1}. ${esc(q.q)}</b>
+${q.o.map((v,j)=>`<label class="option"><input type="radio" name="q${i}" value="${j}" onchange="answers[${i}]=${j}"> ${"ABCD"[j]}. ${esc(v)}</label>`).join('')}
+</div>`).join('');
+show('test');
+}
+function submitTest(){
+let score=0;
+let detail=current.map((q,i)=>{
+let chosen=answers[i];
+if(chosen===q.a)score++;
+return `<div class="question"><b>Q${i+1}. ${esc(q.q)}</b>
+<p>आपका उत्तर: ${chosen===undefined?'नहीं दिया':"ABCD"[chosen]+' - '+(chosen===undefined?'':esc(q.o[chosen]))}</p>
+<p>सही उत्तर: <b>${"ABCD"[q.a]} - ${esc(q.o[q.a])}</b></p></div>`;
+}).join('');
+let pct=Math.round(score/current.length*100);
+document.getElementById('result').innerHTML=`
+<div class="result"><h2>आपका परिणाम / Your Result</h2>
+<h1>${score} / ${current.length}</h1><b>${pct}%</b>
+<p>${pct>=80?'बहुत अच्छा! Excellent!':pct>=50?'अच्छा प्रयास! Good effort!':'अभ्यास जारी रखें! Keep practicing!'}</p>
+</div><h2>उत्तर देखें / Answer Review</h2>${detail}
+<button onclick="show('home')">Home</button>`;
+}
+function addQuestion(){
+let q=document.getElementById('aQuestion').value.trim();
+let o=[0,1,2,3].map(i=>document.getElementById('o'+i).value.trim());
+let subject=document.getElementById('aSubject').value.trim();
+let a=Number(document.getElementById('aCorrect').value);
+if(!q||!subject||o.some(x=>!x)){alert('सभी जानकारी भरें');return}
+bank.push({subject,q,o,a});
+saveBank();
+document.getElementById('adminMessage').textContent='प्रश्न सफलतापूर्वक जोड़ दिया गया।';
+document.getElementById('aQuestion').value='';
+[0,1,2,3].forEach(i=>document.getElementById('o'+i).value='');
+showQuestionList();
+}
+function showQuestionList(){
+document.getElementById('adminList').innerHTML=bank.map((q,i)=>`<li>${esc(q.subject)}: ${esc(q.q)} <button onclick="deleteQuestion(${i})">Delete</button></li>`).join('');
+}
+function deleteQuestion(i){
+if(confirm('क्या आप यह प्रश्न हटाना चाहते हैं?')){
+bank.splice(i,1);saveBank();showQuestionList();
+}
+}
+function esc(s){
+return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+</script>
+</body>
+</html>
